@@ -6,7 +6,7 @@
 
 **Architecture:** All chat state lives in `useChat.js` (custom hook). Components are pure display units receiving state and handlers as props. Conversation flows resolve from `chatData.js` via `chatHelpers.js` with zero network requests. `App` renders a single `ChatWidget` which toggles a `ChatWindow`.
 
-**Tech Stack:** React 18, Vite 5, Tailwind CSS v3, Vitest, React Testing Library
+**Tech Stack:** React 18, Vite 6, Tailwind CSS v3, Vitest, React Testing Library
 
 ---
 
