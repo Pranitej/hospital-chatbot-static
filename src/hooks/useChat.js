@@ -38,6 +38,7 @@ export function useChat() {
         return next.length > 100 ? next.slice(-100) : next
       })
       setIsTyping(false)
+      timerRef.current = null
     }, 400)
   }, [])
 
