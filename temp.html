@@ -1,0 +1,648 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, user-scalable=no"
+    />
+    <title>City Hospital · Chatbot Flow</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        overflow: hidden;
+        font-family:
+          "Inter",
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
+        background: #eef2f7;
+      }
+
+      /* Toolbar */
+      .toolbar {
+        position: fixed;
+        top: 16px;
+        left: 20px;
+        right: 20px;
+        z-index: 100;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: rgba(255, 255, 255, 0.95);
+        backdrop-filter: blur(12px);
+        padding: 8px 22px;
+        border-radius: 60px;
+        box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
+        border: 1px solid rgba(180, 205, 218, 0.6);
+        pointer-events: auto;
+      }
+
+      .title-section h2 {
+        font-size: 1.1rem;
+        font-weight: 700;
+        background: linear-gradient(135deg, #166d7c, #2396ab);
+        background-clip: text;
+        -webkit-background-clip: text;
+        color: transparent;
+      }
+
+      .title-section p {
+        font-size: 0.65rem;
+        color: #5f7f8c;
+        margin-top: 2px;
+      }
+
+      .controls {
+        display: flex;
+        gap: 10px;
+        background: #f5f8fb;
+        padding: 4px 12px;
+        border-radius: 40px;
+        align-items: center;
+      }
+
+      .ctrl-btn {
+        background: white;
+        border: none;
+        font-size: 1rem;
+        cursor: pointer;
+        padding: 4px 12px;
+        border-radius: 30px;
+        font-weight: 600;
+        transition: 0.15s;
+        border: 1px solid #d4e2ea;
+        color: #1f6f80;
+      }
+
+      .ctrl-btn:hover {
+        background: #eef3fc;
+        transform: scale(0.96);
+      }
+
+      .zoom-indicator {
+        font-size: 0.75rem;
+        font-weight: 500;
+        background: #eef2f7;
+        padding: 3px 10px;
+        border-radius: 30px;
+        color: #2a6f7e;
+      }
+
+      /* Viewport */
+      #viewport {
+        width: 100vw;
+        height: 100vh;
+        cursor: grab;
+        overflow: hidden;
+        position: relative;
+      }
+
+      #canvas {
+        transform-origin: 0 0;
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+
+      /* Grid */
+      .grid-bg {
+        position: absolute;
+        width: 2200px;
+        height: 1200px;
+        background-image:
+          linear-gradient(to right, #d4e2ea 0.6px, transparent 0.6px),
+          linear-gradient(to bottom, #d4e2ea 0.6px, transparent 0.6px);
+        background-size: 36px 36px;
+        pointer-events: none;
+        opacity: 0.4;
+      }
+
+      /* Nodes */
+      .node {
+        position: absolute;
+        width: 200px;
+        padding: 12px 10px;
+        border-radius: 16px;
+        text-align: center;
+        background: white;
+        box-shadow: 0 6px 12px -6px rgba(0, 0, 0, 0.1);
+        transition: all 0.2s ease;
+        cursor: pointer;
+        border: 1px solid #e2edf2;
+      }
+
+      .node:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 18px -8px rgba(0, 0, 0, 0.12);
+      }
+
+      .start-node {
+        border-left: 4px solid #2c9e6e;
+        background: #fafdfb;
+      }
+      .bot-node {
+        border-left: 4px solid #2c7da0;
+        background: #fbfefe;
+      }
+      .decision-node {
+        border-left: 4px solid #e9b35f;
+        background: #fffdf8;
+      }
+      .sub-node {
+        border-left: 4px solid #9b6bcf;
+        background: #fdfaff;
+      }
+
+      .node-title {
+        font-weight: 700;
+        font-size: 12px;
+        color: #1a5c6b;
+        margin-bottom: 5px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+      }
+
+      .node-desc {
+        font-size: 9.5px;
+        color: #6f8f9c;
+        line-height: 1.3;
+      }
+
+      .node-badge {
+        display: inline-block;
+        background: #eef3f7;
+        border-radius: 30px;
+        font-size: 7.5px;
+        padding: 2px 7px;
+        margin-top: 6px;
+        color: #2f7b8c;
+      }
+
+      /* SVG Connections */
+      .flow-svg {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 2200px;
+        height: 1200px;
+        pointer-events: none;
+      }
+
+      .flow-path {
+        stroke: #8fb7ca;
+        stroke-width: 2;
+        fill: none;
+        transition: stroke 0.15s;
+        pointer-events: visibleStroke;
+        cursor: default;
+      }
+
+      .flow-path:hover {
+        stroke: #e67e4a;
+        stroke-width: 2.3;
+      }
+
+      /* Legend */
+      .legend-card {
+        position: fixed;
+        bottom: 16px;
+        left: 16px;
+        background: rgba(25, 40, 45, 0.85);
+        backdrop-filter: blur(10px);
+        padding: 8px 16px;
+        border-radius: 40px;
+        color: white;
+        font-size: 10px;
+        display: flex;
+        gap: 14px;
+        z-index: 100;
+        pointer-events: none;
+      }
+
+      .legend-card span {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+      }
+
+      .legend-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 10px;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="toolbar">
+      <div class="title-section">
+        <h2>🏥 City Hospital · Flow</h2>
+        <p>Clean navigation | Limited arrows</p>
+      </div>
+      <div class="controls">
+        <button class="ctrl-btn" id="zoomOutBtn">−</button>
+        <span class="zoom-indicator" id="zoomLevel">100%</span>
+        <button class="ctrl-btn" id="zoomInBtn">+</button>
+        <button class="ctrl-btn" id="resetViewBtn">⟳ Reset</button>
+      </div>
+    </div>
+
+    <div id="viewport">
+      <div id="canvas">
+        <div class="grid-bg"></div>
+        <svg class="flow-svg" id="flowSvg">
+          <defs>
+            <marker
+              id="arrow"
+              markerWidth="7"
+              markerHeight="7"
+              refX="6"
+              refY="3.5"
+              orient="auto"
+            >
+              <path d="M0,0 L7,3.5 L0,7 Z" fill="#6f9eb0" />
+            </marker>
+          </defs>
+        </svg>
+      </div>
+    </div>
+
+    <div class="legend-card">
+      <span
+        ><div class="legend-dot" style="background: #2c9e6e"></div>
+        Start</span
+      >
+      <span
+        ><div class="legend-dot" style="background: #2c7da0"></div>
+        Bot</span
+      >
+      <span
+        ><div class="legend-dot" style="background: #e9b35f"></div>
+        Menu</span
+      >
+      <span
+        ><div class="legend-dot" style="background: #9b6bcf"></div>
+        Detail</span
+      >
+      <span>➡️ Arrow = main path</span>
+    </div>
+
+    <script>
+      // ============================================================
+      // CLEAN, LIGHTWEIGHT FLOW DATA - optimized, minimal arrows
+      // ============================================================
+      const nodes = [
+        {
+          id: "start",
+          type: "start",
+          title: "✨ Start",
+          desc: "User begins chat",
+          x: 60,
+          y: 260,
+          connects: ["welcome"],
+        },
+        {
+          id: "welcome",
+          type: "bot",
+          title: "🏠 Main Menu",
+          desc: "Welcome to City Hospital",
+          x: 280,
+          y: 260,
+          connects: [
+            "book",
+            "doctor",
+            "emergency",
+            "opd",
+            "insurance",
+            "contact",
+          ],
+        },
+        {
+          id: "book",
+          type: "decision",
+          title: "📅 Book/Cancel",
+          desc: "Call 1800-123-4567",
+          x: 560,
+          y: 150,
+          connects: ["opd", "contact"],
+        },
+        {
+          id: "doctor",
+          type: "decision",
+          title: "👨‍⚕️ Find Doctor",
+          desc: "Select specialty",
+          x: 560,
+          y: 230,
+          connects: ["cardio", "ortho", "neuro"],
+        },
+        {
+          id: "emergency",
+          type: "bot",
+          title: "🚨 Emergency",
+          desc: "24/7: 108",
+          x: 560,
+          y: 310,
+          connects: ["ambulance", "icu"],
+        },
+        {
+          id: "opd",
+          type: "bot",
+          title: "🏥 OPD & IPD",
+          desc: "Mon-Sat 8AM-6PM",
+          x: 560,
+          y: 390,
+          connects: ["admission", "insurance"],
+        },
+        {
+          id: "insurance",
+          type: "bot",
+          title: "💳 Insurance",
+          desc: "Cashless facility",
+          x: 860,
+          y: 270,
+          connects: ["contact", "admission"],
+        },
+        {
+          id: "contact",
+          type: "sub",
+          title: "📞 Contact",
+          desc: "1800-123-4567",
+          x: 860,
+          y: 360,
+          connects: [],
+        },
+        {
+          id: "cardio",
+          type: "sub",
+          title: "❤️ Cardiology",
+          desc: "Heart care",
+          x: 1140,
+          y: 180,
+          connects: ["book"],
+        },
+        {
+          id: "ortho",
+          type: "sub",
+          title: "🦴 Orthopedics",
+          desc: "Bone & joint",
+          x: 1140,
+          y: 240,
+          connects: ["book"],
+        },
+        {
+          id: "neuro",
+          type: "sub",
+          title: "🧠 Neurology",
+          desc: "Brain & nerves",
+          x: 1140,
+          y: 300,
+          connects: ["book"],
+        },
+        {
+          id: "ambulance",
+          type: "sub",
+          title: "🚑 Ambulance",
+          desc: "108 or 1800-123-5678",
+          x: 1140,
+          y: 430,
+          connects: ["emergency"],
+        },
+        {
+          id: "icu",
+          type: "sub",
+          title: "🏥 ICU Care",
+          desc: "Critical care",
+          x: 1140,
+          y: 490,
+          connects: ["visiting"],
+        },
+        {
+          id: "visiting",
+          type: "bot",
+          title: "🕒 Visiting Hours",
+          desc: "10-12AM & 5-7PM",
+          x: 1440,
+          y: 490,
+          connects: [],
+        },
+        {
+          id: "admission",
+          type: "sub",
+          title: "📋 Admission",
+          desc: "Doctor note → desk",
+          x: 1140,
+          y: 560,
+          connects: ["opd", "insurance"],
+        },
+      ];
+
+      // Helper to get node
+      function getNode(id) {
+        return nodes.find((n) => n.id === id);
+      }
+
+      // Draw arrows (only essential connections, no back clutter)
+      function drawArrows() {
+        const svg = document.getElementById("flowSvg");
+        // Clear old paths (keep defs)
+        const oldPaths = svg.querySelectorAll(".flow-path, .flow-label");
+        oldPaths.forEach((p) => p.remove());
+
+        nodes.forEach((node) => {
+          if (!node.connects || node.connects.length === 0) return;
+
+          node.connects.forEach((targetId) => {
+            const target = getNode(targetId);
+            if (!target) return;
+
+            // Node centers
+            const fromX = node.x + 100;
+            const fromY = node.y + 38;
+            const toX = target.x + 100;
+            const toY = target.y + 38;
+
+            // Simple bezier with small offset
+            const midX = (fromX + toX) / 2;
+            const midY = (fromY + toY) / 2;
+            let offset = 0;
+            if (Math.abs(fromX - toX) < 200 && fromY !== toY) offset = 18;
+            if (node.id === "doctor") offset = 12;
+
+            const ctrlX = midX;
+            const ctrlY = midY + offset;
+
+            const path = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "path",
+            );
+            path.setAttribute(
+              "d",
+              `M ${fromX} ${fromY} Q ${ctrlX} ${ctrlY}, ${toX} ${toY}`,
+            );
+            path.setAttribute("class", "flow-path");
+            path.setAttribute("stroke", "#8fb7ca");
+            path.setAttribute("fill", "none");
+            path.setAttribute("stroke-width", "1.8");
+            path.setAttribute("marker-end", "url(#arrow)");
+            svg.appendChild(path);
+
+            // Tiny label for specialty selection only
+            if (
+              node.id === "doctor" &&
+              (targetId === "cardio" ||
+                targetId === "ortho" ||
+                targetId === "neuro")
+            ) {
+              const label = document.createElementNS(
+                "http://www.w3.org/2000/svg",
+                "text",
+              );
+              label.setAttribute("x", ctrlX);
+              label.setAttribute("y", ctrlY - 7);
+              label.setAttribute("fill", "#688e9e");
+              label.setAttribute("font-size", "7.5");
+              label.setAttribute("font-weight", "500");
+              label.setAttribute("text-anchor", "middle");
+              label.textContent = "select";
+              label.classList.add("flow-label");
+              svg.appendChild(label);
+            }
+          });
+        });
+      }
+
+      // Render nodes in DOM
+      function renderNodes() {
+        const canvas = document.getElementById("canvas");
+        // Remove existing nodes only
+        const oldNodes = canvas.querySelectorAll(".node");
+        oldNodes.forEach((n) => n.remove());
+
+        nodes.forEach((node) => {
+          const div = document.createElement("div");
+          div.className = `node ${node.type}-node`;
+          div.style.left = `${node.x}px`;
+          div.style.top = `${node.y}px`;
+          div.style.width = "200px";
+
+          const icons = { start: "✨", bot: "💬", decision: "⚙️", sub: "🔖" };
+          const icon = icons[node.type] || "📌";
+
+          div.innerHTML = `
+        <div class="node-title">
+          <span>${icon}</span> ${node.title}
+        </div>
+        <div class="node-desc">${node.desc}</div>
+        <div class="node-badge">→ ${node.connects?.length || 0}</div>
+      `;
+          div.title = `${node.title} → goes to: ${node.connects?.join(", ") || "end"}`;
+          canvas.appendChild(div);
+        });
+      }
+
+      // ========== PERFORMANT PAN & ZOOM ==========
+      const viewport = document.getElementById("viewport");
+      const canvasEl = document.getElementById("canvas");
+      let scale = 0.85;
+      let panX = 110,
+        panY = 50;
+      let isPanning = false;
+      let startX = 0,
+        startY = 0;
+
+      function updateTransform() {
+        canvasEl.style.transform = `translate(${panX}px, ${panY}px) scale(${scale})`;
+        document.getElementById("zoomLevel").innerText =
+          `${Math.round(scale * 100)}%`;
+      }
+
+      // Wheel zoom
+      viewport.addEventListener(
+        "wheel",
+        (e) => {
+          e.preventDefault();
+          const delta = e.deltaY < 0 ? 1.08 : 0.93;
+          scale *= delta;
+          scale = Math.min(Math.max(0.55, scale), 2.0);
+          updateTransform();
+        },
+        { passive: false },
+      );
+
+      // Drag pan
+      viewport.addEventListener("mousedown", (e) => {
+        if (e.button === 0) {
+          isPanning = true;
+          startX = e.clientX - panX;
+          startY = e.clientY - panY;
+          viewport.style.cursor = "grabbing";
+          e.preventDefault();
+        }
+      });
+
+      window.addEventListener("mousemove", (e) => {
+        if (!isPanning) return;
+        panX = e.clientX - startX;
+        panY = e.clientY - startY;
+        updateTransform();
+      });
+
+      window.addEventListener("mouseup", () => {
+        isPanning = false;
+        viewport.style.cursor = "grab";
+      });
+
+      // Buttons
+      document.getElementById("zoomInBtn").onclick = () => {
+        scale = Math.min(2.0, scale * 1.15);
+        updateTransform();
+      };
+      document.getElementById("zoomOutBtn").onclick = () => {
+        scale = Math.max(0.55, scale / 1.15);
+        updateTransform();
+      };
+      document.getElementById("resetViewBtn").onclick = () => {
+        scale = 0.85;
+        panX = 100;
+        panY = 60;
+        updateTransform();
+      };
+
+      // Initial render
+      function init() {
+        renderNodes();
+        drawArrows();
+        updateTransform();
+        viewport.style.cursor = "grab";
+
+        // Add small tooltips to arrows
+        setTimeout(() => {
+          const paths = document.querySelectorAll(".flow-path");
+          paths.forEach((p) => {
+            const title = document.createElementNS(
+              "http://www.w3.org/2000/svg",
+              "title",
+            );
+            title.textContent = "User navigation path";
+            p.appendChild(title);
+          });
+        }, 20);
+      }
+
+      init();
+
+      // Lightweight resize guard: no reflow issues
+      window.addEventListener("resize", () => {
+        // just keep transform; no extra rerender needed
+      });
+    </script>
+  </body>
+</html>

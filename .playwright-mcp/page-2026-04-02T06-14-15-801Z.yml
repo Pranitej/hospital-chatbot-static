@@ -1,0 +1,138 @@
+- generic [active] [ref=e63]:
+  - generic [ref=e64]:
+    - region "Notifications alt+T"
+    - main [ref=e65]:
+      - generic [ref=e66]:
+        - button [ref=e68]:
+          - banner [ref=e69]:
+            - link "Try Mermaid Advanced Editor — OSS users get 10% off with code JS26 Get started" [ref=e71] [cursor=pointer]:
+              - /url: https://mermaid.ai/app/user/billing/checkout?coupon=arDfyFT8&tier=plus&utm_campaign=oss_coupon&utm_medium=banner_ad&utm_source=mermaid_live_editor
+              - generic [ref=e72]: Try Mermaid Advanced Editor — OSS users get 10% off with code JS26
+              - button "Get started" [ref=e73]
+            - button "Dismiss banner" [ref=e74]:
+              - img
+        - navigation [ref=e75]:
+          - generic [ref=e76]:
+            - button [ref=e77]:
+              - img [ref=e78]
+            - img [ref=e80]
+            - link "Mermaid Live Editor" [ref=e83] [cursor=pointer]:
+              - /url: /
+        - generic [ref=e86]:
+          - generic [ref=e88]:
+            - generic [ref=e89]:
+              - toolbar [ref=e90] [cursor=pointer]:
+                - list [ref=e92]:
+                  - tab "Code" [ref=e93]:
+                    - img
+                    - text: Code
+                  - separator [ref=e95]
+                  - tab "Config" [ref=e96]:
+                    - img
+                    - text: Config
+                - link "Docs" [ref=e97]:
+                  - /url: https://mermaid.js.org/syntax/flowchart.html
+                  - img
+                  - text: Docs
+              - code [ref=e102]:
+                - generic [ref=e103]:
+                  - generic [ref=e106]:
+                    - generic [ref=e107]:
+                      - generic [ref=e109] [cursor=pointer]: 
+                      - generic [ref=e110]: "1"
+                    - generic [ref=e112]: "2"
+                    - generic [ref=e114]: "3"
+                    - generic [ref=e116]: "4"
+                    - generic [ref=e118]: "5"
+                    - generic [ref=e120]: "6"
+                    - generic [ref=e122]: "7"
+                  - generic [ref=e137]:
+                    - generic [ref=e139]: flowchart TD
+                    - generic [ref=e141]: A[Christmas] -->|Get money| B(Go shopping)
+                    - generic [ref=e143]: "B --> C{Let me think}"
+                    - generic [ref=e145]: C -->|One| D[Laptop]
+                    - generic [ref=e147]: C -->|Two| E[iPhone]
+                    - generic [ref=e149]: C -->|Three| F[fa:fa-car Car]
+                  - textbox "Editor content" [ref=e152]: "flowchart TD A[Christmas] -->|Get money| B(Go shopping) B --> C{Let me think} C -->|One| D[Laptop] C -->|Two| E[iPhone] C -->|Three| F[fa:fa-car Car]"
+            - generic [ref=e153]:
+              - generic [ref=e154]:
+                - toolbar [ref=e155] [cursor=pointer]:
+                  - menubar [ref=e156]:
+                    - img [ref=e157]
+                    - text: Sample Diagrams
+                  - img [ref=e159]
+                - generic [ref=e162]:
+                  - button "Flowchart" [ref=e163]
+                  - button "Class" [ref=e164]
+                  - button "Sequence" [ref=e165]
+                  - button "Entity Relationship" [ref=e166]
+                  - button "State" [ref=e167]
+                  - button "Mindmap" [ref=e168]
+                  - button "Architecture" [ref=e169]
+                  - button "Block" [ref=e170]
+                  - button "C4" [ref=e171]
+                  - button "Gantt" [ref=e172]
+                  - button "Git" [ref=e173]
+                  - button "Kanban" [ref=e174]
+                  - button "Packet" [ref=e175]
+                  - button "Pie" [ref=e176]
+                  - button "Quadrant" [ref=e177]
+                  - button "Radar" [ref=e178]
+                  - button "Requirement" [ref=e179]
+                  - button "Sankey" [ref=e180]
+                  - button "Timeline" [ref=e181]
+                  - button "Treemap" [ref=e182]
+                  - button "User Journey" [ref=e183]
+                  - button "XY" [ref=e184]
+                  - button "ZenUML" [ref=e185]
+              - toolbar [ref=e187] [cursor=pointer]:
+                - menubar [ref=e188]:
+                  - img [ref=e189]
+                  - text: Actions
+          - separator [ref=e191]
+          - generic [ref=e192]:
+            - document [ref=e195]:
+              - generic [ref=e198]:
+                - generic [ref=e202]:
+                  - paragraph [ref=e208]: Get money
+                  - paragraph [ref=e214]: One
+                  - paragraph [ref=e220]: Two
+                  - paragraph [ref=e226]: Three
+                - generic [ref=e227]:
+                  - paragraph [ref=e234]: Christmas
+                  - paragraph [ref=e241]: Go shopping
+                  - paragraph [ref=e248]: Let me think
+                  - paragraph [ref=e255]: Laptop
+                  - paragraph [ref=e262]: iPhone
+                  - paragraph [ref=e269]:
+                    - generic [ref=e270]: 
+                    - text: Car
+            - generic [ref=e272]:
+              - button "Reset view" [ref=e273]:
+                - img
+              - separator [ref=e274]
+              - button [ref=e275]:
+                - img
+              - button [ref=e276]:
+                - img
+              - separator [ref=e277]
+              - link "Full Screen" [ref=e278] [cursor=pointer]:
+                - /url: /view#pako:eNpVjbFugzAQhl_FuqmVSGRMEK6HSg1ps0Rqh0yFDBYcGDXYyBilKfDuBaKq7U13-r_vvx4ykyMIKM7mkilpHTnuUk2meUpiZavW1bI9kdXqcdijI7XReB3I9m5vSKtM01S6vL_x2xkicX-YMSROVfpjvEXx4r9qHMguOcjGmeb0NzlezECek-pNTfX_E2Vxsl6SQopCrjJpSSztgoAHpa1yEM526EGNtpbzCf2cpuAU1piCmNYcC9mdXQqpHietkfrdmPrHtKYrFUz153a6uiaXDneVLK38RVDnaGPTaQfCf1gqQPTwCSLw1yyklPqUUc5YxAMPriA2fB2GkR8xzjgNKQs2owdfy1e65tFsUMZDHtAg4uM3qYx29g
+                - img
+            - generic [ref=e280]:
+              - generic [ref=e281]: v11.13.0
+              - button "Privacy & Security" [ref=e282]:
+                - button [ref=e283]:
+                  - img
+              - separator [ref=e284]
+              - button "Switch to dark theme" [ref=e285]:
+                - generic [ref=e287]:
+                  - img
+            - generic [ref=e289]:
+              - button "Hand-Drawn" [ref=e290]:
+                - img
+              - button "Background Grid" [pressed] [ref=e291]:
+                - img
+  - generic [ref=e293]:
+    - alert
+    - alert
