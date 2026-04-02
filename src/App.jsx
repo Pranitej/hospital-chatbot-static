@@ -1,3 +1,3 @@
 export default function App() {
-  return <div>Hospital Chatbot</div>
+  return <div>Hospital Chatbot</div>;
 }
