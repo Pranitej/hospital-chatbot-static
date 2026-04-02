@@ -14,7 +14,7 @@ dist-ssr
 
 # Documentation and test artifacts
 docs/
-playwright-mcp/
+.playwright-mcp/
 
 # Editor directories and files
 .vscode/*
